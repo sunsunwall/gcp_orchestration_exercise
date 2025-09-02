@@ -38,6 +38,7 @@ substitutions:
   _BQ_DATASET: raw_data
   _BQ_TABLE: weather_raw
   _BQ_PROJECT: zeta-axiom-468312-f1
+  _WRITER_URL: https://weather-writer-627443857788.europe-north2.run.app
 
 options:
   logging: CLOUD_LOGGING_ONLY
