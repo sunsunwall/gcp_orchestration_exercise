@@ -3,6 +3,8 @@ import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from datetime import datetime, timedelta, timezone
+from google.oauth2 import id_token
+from google.auth.transport.requests import Request as GoogleAuthRequest
 
 load_dotenv()
 
@@ -11,6 +13,9 @@ load_dotenv()
 API_KEY   = os.getenv("API_KEY")
 LOCATION  = os.environ.get("LOCATION", "59.3293,18.0686")
 DATE      = os.environ.get("DATE")
+WRITER_URL = os.environ.get("WRITER_URL")  # e.g., https://writer-xyz.a.run.app/write
+WRITER_AUDIENCE = os.environ.get("WRITER_AUDIENCE", WRITER_URL)
+USE_IAM_AUTH = os.environ.get("USE_IAM_AUTH", "true").lower() in ("1", "true", "yes")
 
 app = FastAPI(title="Weather Ingestion API", version="1.0.0")
 
@@ -57,3 +62,22 @@ def get_weather(location: str | None = None, date: str | None = None):
     return fetch_weather(loc, d)
 
 
+@app.post("/ingest")
+def ingest(location: str | None = None, date: str | None = None):
+    if not WRITER_URL:
+        raise HTTPException(status_code=500, detail="WRITER_URL not configured")
+
+    loc = location or LOCATION
+    d = date or DATE or get_default_date()
+    data = fetch_weather(loc, d)
+
+    headers = {"Content-Type": "application/json"}
+    if USE_IAM_AUTH and WRITER_AUDIENCE:
+        token = id_token.fetch_id_token(GoogleAuthRequest(), WRITER_AUDIENCE)
+        if not token:
+            raise HTTPException(status_code=500, detail="Failed to obtain ID token for writer")
+        headers["Authorization"] = f"Bearer {token}"
+
+    response = requests.post(WRITER_URL, headers=headers, json=data, timeout=60)
+    response.raise_for_status()
+    return {"status": "sent", "writer_status": response.status_code, "location": loc, "date": d}
