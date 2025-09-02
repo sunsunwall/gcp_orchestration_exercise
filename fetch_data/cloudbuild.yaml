@@ -25,7 +25,7 @@ steps:
       - '--region=${_REGION}'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars=LOCATION=${_LOCATION}'
+      - '--set-env-vars=^:^LOCATION=${_LOCATION}'
       - '--set-secrets=API_KEY=projects/$PROJECT_ID/secrets/${_SECRET_NAME}:latest'
 
 images:
