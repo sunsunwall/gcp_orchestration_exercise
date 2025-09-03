@@ -5,7 +5,14 @@ main:
       assign:
         - producer: ${sys.get_env("PRODUCER_URL")}
         - consumer: ${sys.get_env("CONSUMER_URL")}
-        - person: ${default(input.name, sys.get_env("DEFAULT_NAME"))}
+        - person: ${sys.get_env("DEFAULT_NAME")}   # safe default
+  - maybe_override:
+      switch:
+        - condition: ${"name" in input}
+          steps:
+          - set_person:
+              assign:
+                - person: ${input.name}           # only read if it exists
   - fetch:
       call: http.get
       args:
@@ -27,3 +34,4 @@ main:
       result: wr
   - return:
       return: ${wr.body}
+

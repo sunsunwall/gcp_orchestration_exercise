@@ -80,7 +80,6 @@ def health():
 
 
 @app.post("/run")
-@app.get("/run")
 def run(location: str | None = None, date: str | None = None):
     loc = location or LOCATION
     d = date or DATE or get_default_date()
