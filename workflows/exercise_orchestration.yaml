@@ -1,0 +1,29 @@
+main:
+  params: [input]
+  steps:
+  - resolve:
+      assign:
+        - producer: ${sys.get_env("PRODUCER_URL")}
+        - consumer: ${sys.get_env("CONSUMER_URL")}
+        - person: ${default(input.name, sys.get_env("DEFAULT_NAME"))}
+  - fetch:
+      call: http.get
+      args:
+        url: ${producer + "/produce"}
+        query:
+          name: ${person}
+        auth:
+          type: OIDC
+      result: produced
+  - write:
+      call: http.post
+      args:
+        url: ${consumer + "/write"}
+        headers:
+          Content-Type: application/json
+        body: ${produced.body}
+        auth:
+          type: OIDC
+      result: wr
+  - return:
+      return: ${wr.body}
