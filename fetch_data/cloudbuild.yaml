@@ -25,7 +25,7 @@ steps:
       - '--region=${_REGION}'
       - '--platform=managed'
       - '--allow-unauthenticated'
-      - '--set-env-vars=^:^LOCATION=${_LOCATION},WRITER_URL=${_WRITER_URL}/write'
+      - '--set-env-vars=^~^LOCATION=${_LOCATION}~WRITER_URL=${_WRITER_URL}/write'
       - '--set-secrets=API_KEY=${_SECRET_NAME}:latest'
 
 images:
