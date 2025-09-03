@@ -1,0 +1,25 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - functions
+      - deploy
+      - '${_FUNCTION_NAME}'
+      - '--runtime=python311'
+      - '--trigger-http'
+      - '--entry-point=weather_ingestion'
+      - '--source=.'
+      - '--set-env-vars=LOCATION=${_LOCATION},BQ_DATASET=${_BQ_DATASET},BQ_TABLE=${_BQ_TABLE}'
+      - '--set-secrets=API_KEY=${_SECRET_NAME}:latest'
+      - '--region=${_REGION}'
+      - '--allow-unauthenticated'  # For demo; restrict in prod
+
+substitutions:
+  _REGION: europe-north2
+  _FUNCTION_NAME: weather-ingestion
+  _LOCATION: '59.3293,18.0686'
+  _BQ_DATASET: raw_data
+  _BQ_TABLE: weather_raw
+  _SECRET_NAME: WEATHER_API_KEY
+
+options:
+  logging: CLOUD_LOGGING_ONLY

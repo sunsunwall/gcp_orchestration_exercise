@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY job_fetch_write.py .
+
+# Cloud Run Jobs don't need to listen on a port
+CMD ["python", "job_fetch_write.py"]
