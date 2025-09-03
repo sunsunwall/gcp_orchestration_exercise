@@ -1,20 +1,18 @@
 steps:
-  # Build and push image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - build
       - '-f'
-      - 'fetch_data/dockerfile'
+      - 'fetch_write_data/dockerfile'
       - '-t'
       - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA'
-      - 'fetch_data'
+      - 'fetch_write_data'
 
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - push
       - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPO}/${_IMAGE}:$SHORT_SHA'
 
-  # Deploy to Cloud Run with env vars and Secret Manager
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
@@ -34,10 +32,10 @@ images:
 substitutions:
   _REGION: europe-north2
   _AR_REPO: ingestion-pipepline
-  _IMAGE: weather-ingestor
-  _SERVICE: weather-ingestor
+  _IMAGE: weather-fetch-write
+  _SERVICE: weather-fetch-write
   _LOCATION: '59.3293,18.0686'
   _SECRET_NAME: WEATHER_API_KEY
-  _WRITER_URL: https://weather-writer-627443857788.europe-north2.run.app
+
 options:
   logging: CLOUD_LOGGING_ONLY
