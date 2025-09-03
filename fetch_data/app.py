@@ -59,7 +59,7 @@ def get_weather(location: str | None = None, date: str | None = None):
     d = date or DATE or get_default_date()
     return fetch_weather(loc, d)
 
-###ingest route
+###ingest route, testing
 @app.post("/ingest")
 def ingest(location: str | None = None, date: str | None = None):
     if not WRITER_URL:
