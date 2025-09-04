@@ -31,7 +31,7 @@ images:
 
 substitutions:
   _REGION: europe-north2
-  _AR_REPO: ingestion-pipepline
+  _AR_REPO: ingestion-pipeline
   _IMAGE: exercise-producer
   _SERVICE: exercise-producer
   _DEFAULT_NAME: Student
