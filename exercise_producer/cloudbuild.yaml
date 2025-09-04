@@ -35,7 +35,7 @@ substitutions:
   _IMAGE: exercise-producer
   _SERVICE: exercise-producer
   _DEFAULT_NAME: Student
-  _SECRET_NAME: EXERCISE_SECRET
+  _SECRET_NAME: Exercise_secret
 
 options:
   logging: CLOUD_LOGGING_ONLY
