@@ -30,10 +30,10 @@ images:
 
 substitutions:
   _REGION: europe-north2
-  _AR_REPO: ingestion-pipepline
+  _AR_REPO: ingestion-pipeline
   _IMAGE: exercise-consumer
   _SERVICE: exercise-consumer
-  _BUCKET: my-demo-bucket-1337
+  _BUCKET: demo-ingestion-pipeline
   _FOLDER: exercise/
 
 options:
